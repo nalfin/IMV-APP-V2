@@ -95,11 +95,7 @@ export function DialogAddMember({ onSuccess }: { onSuccess?: () => void }) {
         setSubmitStatus('loading') // Set status ke 'loading' untuk menampilkan FullScreenLoader
 
         try {
-            const apiBaseURL =
-                process.env.NEXT_PUBLIC_API_BASE_URL ||
-                (process.env.VERCEL_URL
-                    ? `https://${process.env.VERCEL_URL}`
-                    : undefined)
+            const apiBaseURL = process.env.NEXT_PUBLIC_API_BASE_URL
 
             const payload = {
                 member_name: name,

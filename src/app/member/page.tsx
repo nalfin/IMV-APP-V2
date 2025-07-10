@@ -2,11 +2,7 @@ import TableOfMembers from '@/app/member/member-table'
 import axios from 'axios'
 
 async function getData() {
-    const apiBaseURL =
-        process.env.NEXT_PUBLIC_API_BASE_URL ||
-        (process.env.VERCEL_URL
-            ? `https://${process.env.VERCEL_URL}`
-            : undefined)
+    const apiBaseURL = process.env.NEXT_PUBLIC_API_BASE_URL
 
     const res = await axios.get(`${apiBaseURL}/api/members`)
 

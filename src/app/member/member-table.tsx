@@ -55,11 +55,7 @@ export default function TableOfMembers({
         setSubmitStatus('loading') // Set status ke 'loading' untuk menampilkan FullScreenLoader
 
         try {
-            const apiBaseURL =
-                process.env.NEXT_PUBLIC_API_BASE_URL ||
-                (process.env.VERCEL_URL
-                    ? `https://${process.env.VERCEL_URL}`
-                    : undefined)
+            const apiBaseURL = process.env.NEXT_PUBLIC_API_BASE_URL
 
             const apiUrl = `${apiBaseURL}/api/members`
             const result = await axios.delete(`${apiUrl}/${id}`)

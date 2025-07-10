@@ -123,11 +123,7 @@ export function DialogBulkEditMembers({
             setProgress(i + 1)
 
             try {
-                const apiBaseURL =
-                    process.env.NEXT_PUBLIC_API_BASE_URL ||
-                    (process.env.VERCEL_URL
-                        ? `https://${process.env.VERCEL_URL}`
-                        : undefined)
+                const apiBaseURL = process.env.NEXT_PUBLIC_API_BASE_URL
 
                 const updateUrl = `${apiBaseURL}/api/members/${memberToUpdate.id}`
 
@@ -219,11 +215,7 @@ export function DialogBulkEditMembers({
                     setProgress(i + 1) // Update progress
 
                     try {
-                        const apiBaseURL =
-                            process.env.NEXT_PUBLIC_API_BASE_URL ||
-                            (process.env.VERCEL_URL
-                                ? `https://${process.env.VERCEL_URL}`
-                                : undefined)
+                        const apiBaseURL = process.env.NEXT_PUBLIC_API_BASE_URL
 
                         const deleteUrl = `${apiBaseURL}/api/members/${memberToDelete.id}`
 
