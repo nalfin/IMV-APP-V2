@@ -96,7 +96,10 @@ export function DialogAddMember({ onSuccess }: { onSuccess?: () => void }) {
 
         try {
             const apiBaseURL =
-                process.env.NEXT_PUBLIC_API_BASE_URL || process.env.VERCEL_URL
+                process.env.NEXT_PUBLIC_API_BASE_URL ||
+                (process.env.VERCEL_URL
+                    ? `https://${process.env.VERCEL_URL}`
+                    : undefined)
 
             const payload = {
                 member_name: name,

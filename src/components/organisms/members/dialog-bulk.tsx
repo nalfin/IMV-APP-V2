@@ -125,7 +125,9 @@ export function DialogBulkEditMembers({
             try {
                 const apiBaseURL =
                     process.env.NEXT_PUBLIC_API_BASE_URL ||
-                    process.env.VERCEL_URL
+                    (process.env.VERCEL_URL
+                        ? `https://${process.env.VERCEL_URL}`
+                        : undefined)
 
                 const updateUrl = `${apiBaseURL}/api/members/${memberToUpdate.id}`
 
@@ -219,7 +221,10 @@ export function DialogBulkEditMembers({
                     try {
                         const apiBaseURL =
                             process.env.NEXT_PUBLIC_API_BASE_URL ||
-                            process.env.VERCEL_URL
+                            (process.env.VERCEL_URL
+                                ? `https://${process.env.VERCEL_URL}`
+                                : undefined)
+
                         const deleteUrl = `${apiBaseURL}/api/members/${memberToDelete.id}`
 
                         const response = await axios.delete(deleteUrl)

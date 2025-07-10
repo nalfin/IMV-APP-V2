@@ -19,9 +19,12 @@ const fetcher = async (url: string) => {
 export function useMembers(
     initialData?: MemberTableType[]
 ): SWRResponse<MemberTableType[], Error> {
-    const apiBaseUrl =
-        process.env.NEXT_PUBLIC_API_BASE_URL || process.env.VERCEL_URL
-    const apiUrl = `${apiBaseUrl}/api/members`
+    const apiBaseURL =
+        process.env.NEXT_PUBLIC_API_BASE_URL ||
+        (process.env.VERCEL_URL
+            ? `https://${process.env.VERCEL_URL}`
+            : undefined)
+    const apiUrl = `${apiBaseURL}/api/members`
 
     return useSWR<MemberTableType[]>(apiUrl, fetcher, {
         // Jika initialData diberikan, gunakan sebagai fallbackData.

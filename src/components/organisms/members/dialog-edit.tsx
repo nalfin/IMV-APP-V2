@@ -129,7 +129,10 @@ export default function DialogEditMember({
 
         try {
             const apiBaseURL =
-                process.env.NEXT_PUBLIC_API_BASE_URL || process.env.VERCEL_URL
+                process.env.NEXT_PUBLIC_API_BASE_URL ||
+                (process.env.VERCEL_URL
+                    ? `https://${process.env.VERCEL_URL}`
+                    : undefined)
 
             const payload = {
                 id: member.id,
