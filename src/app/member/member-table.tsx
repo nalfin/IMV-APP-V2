@@ -11,6 +11,8 @@ import CustomAlertDialog from '@/components/molecules/custom-alert-dialog'
 import DialogEditMember from '@/components/organisms/members/dialog-edit'
 import { DialogBulkEditMembers } from '@/components/organisms/members/dialog-bulk'
 
+const apiBaseURL = process.env.NEXT_PUBLIC_API_BASE_URL
+
 export default function TableOfMembers({
     data: initialData
 }: {
@@ -55,10 +57,7 @@ export default function TableOfMembers({
         setSubmitStatus('loading') // Set status ke 'loading' untuk menampilkan FullScreenLoader
 
         try {
-            const apiBaseURL = process.env.NEXT_PUBLIC_API_BASE_URL
-
-            const apiUrl = `${apiBaseURL}/api/members`
-            const result = await axios.delete(`${apiUrl}/${id}`)
+            const result = await axios.delete(`${apiBaseURL}/api/members/${id}`)
 
             if (result.data.success) {
                 await mutate() // Tunggu sampai mutate selesai merevalidasi data

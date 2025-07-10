@@ -28,6 +28,8 @@ import RadioRole from '@/components/molecules/members/radio-role'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import CustomAlertDialog from '@/components/molecules/custom-alert-dialog'
 
+const apiBaseURL = process.env.NEXT_PUBLIC_API_BASE_URL
+
 export function DialogAddMember({ onSuccess }: { onSuccess?: () => void }) {
     const [open, setOpen] = useState(false)
     const [name, setName] = useState('')
@@ -95,8 +97,6 @@ export function DialogAddMember({ onSuccess }: { onSuccess?: () => void }) {
         setSubmitStatus('loading') // Set status ke 'loading' untuk menampilkan FullScreenLoader
 
         try {
-            const apiBaseURL = process.env.NEXT_PUBLIC_API_BASE_URL
-
             const payload = {
                 member_name: name,
                 hq,

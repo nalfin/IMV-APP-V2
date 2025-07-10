@@ -20,9 +20,10 @@ export function useMembers(
     initialData?: MemberTableType[]
 ): SWRResponse<MemberTableType[], Error> {
     const apiBaseURL = process.env.NEXT_PUBLIC_API_BASE_URL
-    const apiUrl = `${apiBaseURL}/api/members`
 
-    return useSWR<MemberTableType[]>(apiUrl, fetcher, {
+    const apiURL = `${apiBaseURL}/api/members`
+
+    return useSWR<MemberTableType[]>(apiURL, fetcher, {
         // Jika initialData diberikan, gunakan sebagai fallbackData.
         // Ini berguna saat data awal disediakan oleh Server Component.
         fallbackData: initialData,

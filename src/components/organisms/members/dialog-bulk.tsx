@@ -28,6 +28,8 @@ interface Props {
     onSuccess: () => void
 }
 
+const apiBaseURL = process.env.NEXT_PUBLIC_API_BASE_URL
+
 export function DialogBulkEditMembers({
     open,
     onOpenChange,
@@ -123,8 +125,6 @@ export function DialogBulkEditMembers({
             setProgress(i + 1)
 
             try {
-                const apiBaseURL = process.env.NEXT_PUBLIC_API_BASE_URL
-
                 const updateUrl = `${apiBaseURL}/api/members/${memberToUpdate.id}`
 
                 const payload = {
@@ -215,8 +215,6 @@ export function DialogBulkEditMembers({
                     setProgress(i + 1) // Update progress
 
                     try {
-                        const apiBaseURL = process.env.NEXT_PUBLIC_API_BASE_URL
-
                         const deleteUrl = `${apiBaseURL}/api/members/${memberToDelete.id}`
 
                         const response = await axios.delete(deleteUrl)

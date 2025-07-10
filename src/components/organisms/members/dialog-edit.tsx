@@ -27,6 +27,8 @@ import RadioRole from '@/components/molecules/members/radio-role'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import CustomAlertDialog from '@/components/molecules/custom-alert-dialog' // Pastikan path ini benar
 
+const apiBaseURL = process.env.NEXT_PUBLIC_API_BASE_URL
+
 export default function DialogEditMember({
     member,
     open,
@@ -128,8 +130,6 @@ export default function DialogEditMember({
         setSubmitStatus('loading') // Mulai loading untuk menampilkan FullScreenLoader
 
         try {
-            const apiBaseURL = process.env.NEXT_PUBLIC_API_BASE_URL
-
             const payload = {
                 id: member.id,
                 member_name: nama,

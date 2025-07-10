@@ -1,9 +1,9 @@
 import TableOfMembers from '@/app/member/member-table'
 import axios from 'axios'
 
-async function getData() {
-    const apiBaseURL = process.env.NEXT_PUBLIC_API_BASE_URL
+const apiBaseURL = process.env.NEXT_PUBLIC_API_BASE_URL
 
+async function getData() {
     const res = await axios.get(`${apiBaseURL}/api/members`)
 
     if (res.status !== 200) {
