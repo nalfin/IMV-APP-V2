@@ -1,7 +1,6 @@
 // app/member/dialog-bulk-edit-members.tsx
 'use client'
 
-import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/atoms/button'
 import {
@@ -28,7 +27,7 @@ interface Props {
     onSuccess: () => void
 }
 
-const apiBaseURL = process.env.NEXT_PUBLIC_API_BASE_URL
+const API_URL = process.env.NEXT_PUBLIC_API_URL
 
 export function DialogBulkEditMembers({
     open,
@@ -125,7 +124,7 @@ export function DialogBulkEditMembers({
             setProgress(i + 1)
 
             try {
-                const updateUrl = `${apiBaseURL}/api/members/${memberToUpdate.id}`
+                const updateUrl = `${API_URL}/api/members/${memberToUpdate.id}`
 
                 const payload = {
                     id: memberToUpdate.id,
@@ -136,8 +135,15 @@ export function DialogBulkEditMembers({
                     status: status ? status : memberToUpdate.status
                 }
 
-                const response = await axios.put(updateUrl, payload)
-                const result = response.data
+                const res = await fetch(updateUrl, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                })
+
+                const result = await res.json()
 
                 if (result.success) {
                     successfulUpdates++
@@ -215,10 +221,13 @@ export function DialogBulkEditMembers({
                     setProgress(i + 1) // Update progress
 
                     try {
-                        const deleteUrl = `${apiBaseURL}/api/members/${memberToDelete.id}`
+                        const deleteUrl = `${API_URL}/api/members/${memberToDelete.id}`
 
-                        const response = await axios.delete(deleteUrl)
-                        const result = response.data
+                        const res = await fetch(deleteUrl, {
+                            method: 'DELETE'
+                        })
+
+                        const result = await res.json()
 
                         if (result.success) {
                             successfulDeletes++

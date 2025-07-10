@@ -27,7 +27,7 @@ import RadioRole from '@/components/molecules/members/radio-role'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import CustomAlertDialog from '@/components/molecules/custom-alert-dialog' // Pastikan path ini benar
 
-const apiBaseURL = process.env.NEXT_PUBLIC_API_BASE_URL
+const API_URL = process.env.NEXT_PUBLIC_API_URL
 
 export default function DialogEditMember({
     member,
@@ -139,12 +139,15 @@ export default function DialogEditMember({
                 status
             }
 
-            const response = await axios.put(
-                `${apiBaseURL}/api/members/${member.id}`,
-                payload
-            )
+            const res = await fetch(`${API_URL}/api/members/${member.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
 
-            const result = response.data
+            const result = await res.json()
 
             if (result.success) {
                 onSuccess?.()

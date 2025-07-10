@@ -1,25 +1,23 @@
 'use client'
 
-import axios from 'axios'
 import { useState } from 'react'
 import { getColumns } from './columns'
 import { MemberTableType } from '@/types/member.type'
 import { MemberDataTable } from '@/app/member/data-table'
-import { useMembers } from '@/hooks/use-member' // Pastikan path ini benar
 import { FullScreenLoader } from '@/components/ui/fullscreen-loader'
 import CustomAlertDialog from '@/components/molecules/custom-alert-dialog'
 import DialogEditMember from '@/components/organisms/members/dialog-edit'
 import { DialogBulkEditMembers } from '@/components/organisms/members/dialog-bulk'
 
-const apiBaseURL = process.env.NEXT_PUBLIC_API_BASE_URL
+const API_URL = process.env.NEXT_PUBLIC_API_URL
 
 export default function TableOfMembers({
-    data: initialData
+    data,
+    onSuccess
 }: {
     data: MemberTableType[]
+    onSuccess: () => void
 }) {
-    const { data, error, mutate } = useMembers(initialData)
-
     const [selectedMember, setSelectedMember] =
         useState<MemberTableType | null>(null)
     const [editOpen, setEditOpen] = useState(false)
@@ -57,10 +55,14 @@ export default function TableOfMembers({
         setSubmitStatus('loading') // Set status ke 'loading' untuk menampilkan FullScreenLoader
 
         try {
-            const result = await axios.delete(`${apiBaseURL}/api/members/${id}`)
+            const res = await fetch(`${API_URL}/api/members/${id}`, {
+                method: 'DELETE'
+            })
 
-            if (result.data.success) {
-                await mutate() // Tunggu sampai mutate selesai merevalidasi data
+            const result = await res.json()
+
+            if (result.success) {
+                onSuccess()
                 setSubmitStatus('success') // Set status sukses
                 // Opsional: Tampilkan toast/notifikasi sukses singkat sebelum kembali ke idle
                 setTimeout(() => {
@@ -69,7 +71,7 @@ export default function TableOfMembers({
             } else {
                 handleOpenAlertDialog(
                     'Gagal Menghapus Anggota',
-                    `❌ Gagal: ${result.data.message || 'Terjadi kesalahan saat menghapus.'}`
+                    `❌ Gagal: ${result.message || 'Terjadi kesalahan saat menghapus.'}`
                 )
                 setSubmitStatus('error') // Set status error
             }
@@ -81,10 +83,6 @@ export default function TableOfMembers({
             )
             setSubmitStatus('error') // Set status error
         }
-    }
-
-    const handleSuccessFetchData = () => {
-        mutate()
     }
 
     const handleBulkEditOpen = (selected: MemberTableType[]) => {
@@ -100,18 +98,18 @@ export default function TableOfMembers({
     const columns = getColumns(handleEdit, handleDelete)
 
     // Jika data belum ada (initial load) dan ada error, tampilkan pesan error
-    if (error && !data) {
-        // Memastikan error hanya saat data benar-benar tidak ada
-        return (
-            <div className="text-red-500">
-                Error loading members: {error.message}
-            </div>
-        )
-    }
+    // if (error && !data) {
+    //     // Memastikan error hanya saat data benar-benar tidak ada
+    //     return (
+    //         <div className="text-red-500">
+    //             Error loading members: {error.message}
+    //         </div>
+    //     )
+    // }
 
-    if (!data) {
-        return <div>No members found.</div>
-    }
+    // if (!data) {
+    //     return <div>No members found.</div>
+    // }
 
     return (
         <>
@@ -127,7 +125,7 @@ export default function TableOfMembers({
                     showFromLast={showFromLast}
                     setShowFromLast={setShowFromLast}
                     onBulkEditOpen={handleBulkEditOpen}
-                    onSuccess={handleSuccessFetchData}
+                    onSuccess={onSuccess}
                 />
 
                 {selectedMember && (
@@ -135,7 +133,7 @@ export default function TableOfMembers({
                         member={selectedMember}
                         open={editOpen}
                         onOpenChange={setEditOpen}
-                        onSuccess={handleSuccessFetchData}
+                        onSuccess={onSuccess}
                     />
                 )}
 
@@ -144,7 +142,7 @@ export default function TableOfMembers({
                         open={openBulkEdit}
                         onOpenChange={setOpenBulkEdit}
                         selectedMembers={selectedMembers}
-                        onSuccess={handleSuccessFetchData}
+                        onSuccess={onSuccess}
                     />
                 )}
             </div>

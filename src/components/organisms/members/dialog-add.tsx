@@ -1,7 +1,6 @@
 // app/member/dialog-add-member.tsx
 'use client'
 
-import axios from 'axios'
 import { useState } from 'react'
 import { PlusCircle } from 'lucide-react'
 import {
@@ -28,7 +27,7 @@ import RadioRole from '@/components/molecules/members/radio-role'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import CustomAlertDialog from '@/components/molecules/custom-alert-dialog'
 
-const apiBaseURL = process.env.NEXT_PUBLIC_API_BASE_URL
+const API_URL = process.env.NEXT_PUBLIC_API_URL
 
 export function DialogAddMember({ onSuccess }: { onSuccess?: () => void }) {
     const [open, setOpen] = useState(false)
@@ -105,12 +104,19 @@ export function DialogAddMember({ onSuccess }: { onSuccess?: () => void }) {
                 status
             }
 
-            const res = await axios.post(`${apiBaseURL}/api/members`, payload)
-            const result = res.data
+            const res = await fetch(`${API_URL}/api/members`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+
+            const result = await res.json()
 
             if (result.success) {
-                onSuccess?.() // Panggil onSuccess segera setelah sukses API
-                setSubmitStatus('success') // Set status ke 'success'
+                onSuccess?.()
+                setSubmitStatus('success')
 
                 setTimeout(() => {
                     setOpen(false)
