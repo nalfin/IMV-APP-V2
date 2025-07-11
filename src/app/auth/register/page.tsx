@@ -5,7 +5,9 @@ import RegisterView from '@/components/templates/auth/register'
 const RegisterPage = () => {
     return (
         <>
-            <RegisterView />
+            <div>
+                <RegisterView />
+            </div>
         </>
     )
 }
