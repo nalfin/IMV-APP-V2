@@ -98,7 +98,6 @@ export default function TableOfMembers({
 
     const { data: session } = useSession()
     const role = (session?.user as { role: string })?.role ?? 'unknown'
-    console.log('🚀 ~ role:', role)
 
     const columns = getMemberColumns(role, handleEdit, handleDelete)
 

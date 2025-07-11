@@ -18,7 +18,6 @@ export default function CardMemberSummary() {
         `${process.env.NEXT_PUBLIC_API_URL}/api/members/summary`,
         fetcher
     )
-    console.log('🚀 ~ CardMemberSummary ~ summary:', data)
 
     const dataSummary = data || []
     const fixedData = dataSummary.map((item: any) => ({
@@ -28,13 +27,10 @@ export default function CardMemberSummary() {
         'HQ 24-26': item.midLevel,
         'HQ < 24': item.downLevel
     }))
-    console.log('🚀 ~ fixedData ~ fixedData:', fixedData)
 
     const summary = processSummaryByWeek(fixedData)
 
     if (!summary) return null
-
-    console.log('🚀 ~ CardMemberSummary ~ processed:', summary)
 
     return (
         <div className="grid grid-cols-2 gap-4 md:gap-6 lg:grid-cols-4">

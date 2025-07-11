@@ -21,26 +21,31 @@ const LoginView = ({ searchParams }: any) => {
     const handleLogin = async (e: any) => {
         e.preventDefault()
         setIsLoading(true)
+        setIsError('')
 
         try {
             const res = await signIn('credentials', {
                 redirect: false,
-                username: username,
-                password: password,
+                username,
+                password,
                 callbackUrl
             })
 
-            if (!res?.error) {
-                setIsLoading(false)
-                push(callbackUrl)
+            if (res === null || res === undefined) {
+                console.error('signIn response is null or undefined')
+                setIsError('Terjadi kesalahan saat login')
             } else {
-                setIsLoading(false)
-                setIsError('Username atau password salah!')
+                if (res.error) {
+                    setIsError('Username atau password salah!')
+                } else {
+                    push(res.url ?? callbackUrl)
+                }
             }
         } catch (err: any) {
-            console.error(err)
+            console.error('❌ signIn error:', err)
+            setIsError('Terjadi kesalahan saat login')
+        } finally {
             setIsLoading(false)
-            setIsError('Username atau password salah!')
         }
     }
 
