@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server' // Import NextResponse for API responses
-import { getSheetsClient } from '@/lib/utils/sheet-client' // Import Google Sheets client
-import { validateSheetID } from '@/lib/utils/sheet-utils' // Import sheet utilities
+import { getSheetsClient } from '@/lib/sheets/init' // Import Google Sheets client
+import { validateSheetID } from '@/lib/sheets/sheet-utils' // Import sheet utilities
 
 /**
  * Handler for deleting a member from the Google Sheet.

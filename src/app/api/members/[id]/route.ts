@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { validateSheetID } from '@/lib/utils/sheet-utils'
+import { validateSheetID } from '@/lib/sheets/sheet-utils'
 import { updateMemberInDbMembers } from '@/lib/api/members/update-to-db'
 import { updateMemberInDbVsda } from '@/lib/api/vsda/update-to-db' // Import fungsi baru
 import { updateMemberInDbEvents } from '@/lib/api/events/update-to-db' // Import fungsi yang diperbarui

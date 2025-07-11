@@ -1,4 +1,4 @@
-import { getSheetsClient } from '@/lib/utils/sheet-client'
+import { getSheetsClient } from '@/lib/sheets/init'
 
 export async function updateMemberInDbMembers(
     spreadsheetId: string,

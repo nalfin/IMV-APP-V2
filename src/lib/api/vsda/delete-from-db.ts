@@ -1,4 +1,4 @@
-import { getSheetsClient } from '@/lib/utils/sheet-client'
+import { getSheetsClient } from '@/lib/sheets/init'
 
 /**
  * Menghapus entri member dari sheet DB_VS_DA berdasarkan ID member.

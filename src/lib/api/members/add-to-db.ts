@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
-import { getSheetsClient } from '@/lib/utils/sheet-client'
-import { generateCustomId, validateSheetID } from '@/lib/utils/sheet-utils' // generateCustomId tidak lagi digunakan
+import { getSheetsClient } from '@/lib/sheets/init'
+import { generateCustomId, validateSheetID } from '@/lib/sheets/sheet-utils' // generateCustomId tidak lagi digunakan
 import { addMemberToDbVsda } from '@/lib/api/vsda/add-to-db'
 
 export async function handleAddMember(request: Request) {

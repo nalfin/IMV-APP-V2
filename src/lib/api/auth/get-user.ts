@@ -1,5 +1,5 @@
-import { getSheetsClient } from '@/lib/utils/sheet-client'
-import { validateSheetID } from '@/lib/utils/sheet-utils'
+import { getSheetsClient } from '@/lib/sheets/init'
+import { validateSheetID } from '@/lib/sheets/sheet-utils'
 import { time } from 'console'
 import { NextResponse } from 'next/server'
 
@@ -29,8 +29,8 @@ export async function handleGetUsers() {
 
         const users = rows.slice(1).map((row) => ({
             id: row[0],
-            name: row[1],
-            pasword: row[2],
+            username: row[1],
+            password: row[2],
             role: row[3],
             time_stamp: row[4]
         }))

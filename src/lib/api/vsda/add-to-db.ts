@@ -1,4 +1,4 @@
-import { getSheetsClient } from '@/lib/utils/sheet-client'
+import { getSheetsClient } from '@/lib/sheets/init'
 
 /**
  * Menambahkan entri member baru ke sheet DB_VS_DA.

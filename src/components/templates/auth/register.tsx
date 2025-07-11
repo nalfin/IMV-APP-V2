@@ -2,6 +2,7 @@
 
 import AuthLogo from '@/components/molecules/auth/auth-logo'
 import FormRegister from '@/components/molecules/auth/form-register'
+import { register } from '@/lib/sheets/service'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
@@ -21,33 +22,52 @@ const RegisterView = () => {
 
     const handleRegister = async (e: any) => {
         e.preventDefault()
-
         setIsLoading(true)
 
-        const payload = {
-            username: username,
-            password: password
-        }
-        const result = await fetch('/api/auth/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(payload)
-        })
+        const result = await register({ username, password })
 
-        if (result.status === 200) {
+        if (result.success) {
             e.target.reset()
             setIsLoading(false)
-            // setIsSuccess(true)
+            setIsSuccess(true)
             setTimeout(() => {
                 push('/auth/login')
             }, 500)
         } else {
             setIsLoading(false)
-            setIsError(result.status === 400 ? 'Username sudah ada!' : '')
+            setIsError(result.message)
         }
     }
+
+    // const handleRegister = async (e: any) => {
+    //     e.preventDefault()
+
+    //     setIsLoading(true)
+
+    //     const payload = {
+    //         username: username,
+    //         password: password
+    //     }
+    //     const result = await fetch('/api/auth/register', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify(payload)
+    //     })
+
+    //     if (result.status === 200) {
+    //         e.target.reset()
+    //         setIsLoading(false)
+    //         setIsSuccess(true)
+    //         setTimeout(() => {
+    //             push('/auth/login')
+    //         }, 500)
+    //     } else {
+    //         setIsLoading(false)
+    //         setIsError(result.status === 400 ? 'Username sudah ada!' : '')
+    //     }
+    // }
 
     return (
         <div className="flex h-screen flex-col items-center justify-center gap-8 px-4 font-sans">

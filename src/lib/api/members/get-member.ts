@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server' // Import NextResponse
-import { getSheetsClient } from '@/lib/utils/sheet-client'
-import { validateSheetID } from '@/lib/utils/sheet-utils'
+import { getSheetsClient } from '@/lib/sheets/init'
+import { validateSheetID } from '@/lib/sheets/sheet-utils'
 
 export async function handleGetMembers() {
     // Tidak perlu req, res lagi, karena Request akan ditangani di route.ts

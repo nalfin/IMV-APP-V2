@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
-import { getSheetsClient } from '@/lib/utils/sheet-client'
-import { validateSheetID } from '@/lib/utils/sheet-utils'
+import { getSheetsClient } from '@/lib/sheets/init'
+import { validateSheetID } from '@/lib/sheets/sheet-utils'
 
 export async function handleAddEvents(request: Request) {
     const spreadsheetId = process.env.GOOGLE_SHEET_ID

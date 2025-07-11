@@ -1,14 +1,11 @@
 'use client'
 
 import LoginView from '@/components/templates/auth/login'
-import { Suspense } from 'react'
 
-const LoginPage = () => {
+const LoginPage = ({ searchParams }: any) => {
     return (
         <>
-            <Suspense>
-                <LoginView />
-            </Suspense>
+            <LoginView searchParams={searchParams} />
         </>
     )
 }
