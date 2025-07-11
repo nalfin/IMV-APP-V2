@@ -1,3 +1,5 @@
+'use client'
+
 import LoginView from '@/components/templates/auth/login'
 
 const LoginPage = () => {
