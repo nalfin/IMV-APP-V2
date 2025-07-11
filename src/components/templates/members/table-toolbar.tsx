@@ -9,6 +9,7 @@ import { Label } from '@/components/atoms/label'
 import { MemberTableType } from '@/types/member.type'
 import { DialogAddMember } from '@/components/organisms/members/dialog-add'
 import { useMembers } from '@/hooks/use-member'
+import { useSession } from 'next-auth/react'
 // import { DialogAddMember } from '@/app/member/dialog-add' // Path ini mungkin perlu disesuaikan jika DialogAddMember juga dipindahkan
 // import { Member } from '@/types/member'
 
@@ -29,6 +30,8 @@ export function DataTableToolbarMember<TData extends MemberTableType>({
     setShowFromLast,
     onBulkEditOpen
 }: DataTableToolbarProps<TData>) {
+    const { data: session } = useSession()
+    const role = (session?.user as { role: string })?.role ?? 'unknown'
     return (
         <div className="flex flex-col-reverse gap-4 py-4 md:flex-row md:items-center md:justify-between md:gap-6">
             {/* Search Input and Bulk Edit Button */}
@@ -47,15 +50,17 @@ export function DataTableToolbarMember<TData extends MemberTableType>({
                             ?.setFilterValue(event.target.value)
                     }
                 />
-                <Button
-                    variant="outline"
-                    size="default"
-                    className="rounded-sm"
-                    onClick={() => onBulkEditOpen(selectedRows)}
-                    disabled={selectedRows.length === 0}
-                >
-                    Edit Selected
-                </Button>
+                {role === 'admin' && (
+                    <Button
+                        variant="outline"
+                        size="default"
+                        className="rounded-sm"
+                        onClick={() => onBulkEditOpen(selectedRows)}
+                        disabled={selectedRows.length === 0}
+                    >
+                        Edit Selected
+                    </Button>
+                )}
             </div>
 
             {/* Show From Last Checkbox and Add Member Dialog */}
@@ -70,7 +75,7 @@ export function DataTableToolbarMember<TData extends MemberTableType>({
                     />
                     <Label htmlFor="showLast">Show From Last</Label>
                 </div>
-                <DialogAddMember onSuccess={onSuccess} />
+                {role === 'admin' && <DialogAddMember onSuccess={onSuccess} />}
             </div>
         </div>
     )

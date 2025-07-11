@@ -7,11 +7,13 @@ import { Checkbox } from '@/components/atoms/checkbox'
 import { MemberTableType } from '@/types/member.type'
 import { ActionCell } from '@/components/molecules/members/action-cell'
 
-export const getColumns = (
+export const getMemberColumns = (
+    role: string, // Role diterima sebagai parameter pertama
     onEdit: (member: MemberTableType) => void,
     handleDelete: (id: string) => Promise<void>
 ): ColumnDef<MemberTableType>[] => {
-    return [
+    // Definisikan kolom dasar
+    const baseColumns: ColumnDef<MemberTableType>[] = [
         {
             id: 'select',
             header: ({ table }) => (
@@ -81,8 +83,12 @@ export const getColumns = (
                     </span>
                 )
             }
-        },
-        {
+        }
+    ]
+
+    // Tambahkan kolom 'actions' hanya jika role adalah 'admin'
+    if (role === 'admin') {
+        baseColumns.push({
             id: 'actions',
             size: 50,
             minSize: 50,
@@ -94,6 +100,8 @@ export const getColumns = (
                     onDelete={handleDelete}
                 />
             )
-        }
-    ]
+        })
+    }
+
+    return baseColumns
 }

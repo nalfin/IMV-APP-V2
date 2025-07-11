@@ -1,8 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter_Tight, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
-import { ThemeProvider } from '@/components/ui/theme-provider'
-import LayoutPages from '@/components/ui/layout-pages'
+import Providers from '@/components/ui/providers'
 
 const interTightSans = Inter_Tight({
     variable: '--font-sans',
@@ -30,14 +29,7 @@ export default function RootLayout({
                 className={`${interTightSans.variable} ${jetBrainsMono.variable} antialiased`}
                 suppressHydrationWarning
             >
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="dark"
-                    enableSystem
-                    disableTransitionOnChange
-                >
-                    <LayoutPages>{children}</LayoutPages>
-                </ThemeProvider>
+                <Providers>{children}</Providers>
             </body>
         </html>
     )

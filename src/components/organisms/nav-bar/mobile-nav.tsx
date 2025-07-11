@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/atoms/button'
 import NavMenu from '@/components/molecules/nav-bar/nav-menu'
+import NavCta from '@/components/molecules/nav-bar/nav-cta'
 
 const MobileNavbar = () => {
     const router = useRouter()
@@ -45,24 +46,9 @@ const MobileNavbar = () => {
                         Mobile navigation menu
                     </SheetDescription>
                 </SheetHeader>
-
-                {/* Menu vertical */}
-                <div className="mt-6 space-y-10 px-4">
-                    {isLoggedIn && <NavMenu />}
-
-                    {isLoggedIn ? (
-                        <Button
-                            size="default"
-                            variant="outline"
-                            onClick={handleLogout}
-                        >
-                            Logout
-                        </Button>
-                    ) : (
-                        <Button size="default" asChild>
-                            <Link href="/login">Login</Link>
-                        </Button>
-                    )}
+                <div className="mt-10 flex flex-col gap-10">
+                    <NavMenu />
+                    <NavCta />
                 </div>
             </SheetContent>
         </Sheet>

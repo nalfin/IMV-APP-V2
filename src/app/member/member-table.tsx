@@ -1,13 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import { getColumns } from './columns'
 import { MemberTableType } from '@/types/member.type'
 import { MemberDataTable } from '@/app/member/data-table'
 import { FullScreenLoader } from '@/components/ui/fullscreen-loader'
 import CustomAlertDialog from '@/components/molecules/custom-alert-dialog'
 import DialogEditMember from '@/components/organisms/members/dialog-edit'
 import { DialogBulkEditMembers } from '@/components/organisms/members/dialog-bulk'
+import { useSession } from 'next-auth/react'
+import { getMemberColumns } from '@/app/member/columns'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL
 
@@ -95,21 +96,11 @@ export default function TableOfMembers({
         setEditOpen(true)
     }
 
-    const columns = getColumns(handleEdit, handleDelete)
+    const { data: session } = useSession()
+    const role = (session?.user as { role: string })?.role ?? 'unknown'
+    console.log('🚀 ~ role:', role)
 
-    // Jika data belum ada (initial load) dan ada error, tampilkan pesan error
-    // if (error && !data) {
-    //     // Memastikan error hanya saat data benar-benar tidak ada
-    //     return (
-    //         <div className="text-red-500">
-    //             Error loading members: {error.message}
-    //         </div>
-    //     )
-    // }
-
-    // if (!data) {
-    //     return <div>No members found.</div>
-    // }
+    const columns = getMemberColumns(role, handleEdit, handleDelete)
 
     return (
         <>

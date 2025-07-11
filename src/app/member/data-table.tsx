@@ -76,6 +76,7 @@ export function MemberDataTable<TData extends MemberTableType, TValue>({
                 setShowFromLast={setShowFromLast}
                 onBulkEditOpen={onBulkEditOpen}
             />
+
             <DataTableViewMember table={table} columnsLength={columns.length} />
             <DataTablePaginationMember
                 table={table}

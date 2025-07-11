@@ -2,12 +2,6 @@ import { NextResponse } from 'next/server' // Import NextResponse
 import { getSheetsClient } from '@/lib/utils/sheet-client'
 import { validateSheetID } from '@/lib/utils/sheet-utils'
 
-/**
- * Handler untuk mengambil semua data member dari Google Sheet.
- * Fungsi ini dirancang untuk digunakan dalam App Router Next.js.
- *
- * @returns {Promise<NextResponse>} Respon JSON yang berisi daftar member atau pesan error.
- */
 export async function handleGetMembers() {
     // Tidak perlu req, res lagi, karena Request akan ditangani di route.ts
     const spreadsheetId = process.env.GOOGLE_SHEET_ID

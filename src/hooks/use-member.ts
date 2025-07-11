@@ -10,8 +10,6 @@ const fetcher = async (url: string) => {
     const res = await fetch(url, { method: 'GET' })
     const result = await res.json()
 
-    console.log(result)
-
     // const res = await axios.get(url)
     // Sesuaikan ini berdasarkan struktur respons API Anda.
     // Jika API mengembalikan { success: true, data: [...] }, maka gunakan res.data.data

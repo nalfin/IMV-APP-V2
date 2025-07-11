@@ -1,16 +1,10 @@
 'use client'
 
 import TableOfMembers from '@/app/member/member-table'
+import CardMemberSummary from '@/components/organisms/members/card-summary'
 import { FullScreenLoader } from '@/components/ui/fullscreen-loader'
+import { fetcher } from '@/hooks/fetcher'
 import useSWR from 'swr'
-
-const fetcher = (url: string) =>
-    fetch(url).then((res) => {
-        if (!res.ok) {
-            throw new Error('Failed to fetch members')
-        }
-        return res.json()
-    })
 
 const MemberPages = () => {
     const { data, error, isLoading, mutate } = useSWR(
@@ -24,7 +18,9 @@ const MemberPages = () => {
     return (
         <>
             {isLoading && <FullScreenLoader />}
-            <div>
+            <div className="space-y-4">
+                <h1 className="text-2xl font-bold">Dashboard Member</h1>
+                <CardMemberSummary />
                 <TableOfMembers data={data || []} onSuccess={handleFetchData} />
             </div>
         </>

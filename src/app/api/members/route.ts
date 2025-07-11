@@ -1,7 +1,7 @@
 // app/api/members/route.ts
 import { NextResponse } from 'next/server'
-import { handleAddMember } from '@/lib/api/members/add-member'
 import { handleGetMembers } from '@/lib/api/members/get-member'
+import { handleAddMember } from '@/lib/api/members/add-to-db'
 
 // Handler untuk GET /api/members
 export async function GET(request: Request) {
@@ -10,7 +10,7 @@ export async function GET(request: Request) {
 
 // Handler untuk POST /api/members
 export async function POST(request: Request) {
-    return handleAddMember(request) // Panggil handler yang sudah diadaptasi
+    return handleAddMember(request)
 }
 
 // Metode lain tidak didukung di rute ini
