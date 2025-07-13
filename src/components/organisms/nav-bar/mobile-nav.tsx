@@ -8,32 +8,10 @@ import {
     SheetTrigger
 } from '@/components/atoms/sheet'
 import { Menu } from 'lucide-react'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
-import { Button } from '@/components/atoms/button'
 import NavMenu from '@/components/molecules/nav-bar/nav-menu'
 import NavCta from '@/components/molecules/nav-bar/nav-cta'
 
 const MobileNavbar = () => {
-    const router = useRouter()
-    const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null)
-
-    useEffect(() => {
-        const status = localStorage.getItem('isLoggedIn')
-        setIsLoggedIn(status === 'true')
-    }, [])
-
-    const handleLogout = () => {
-        localStorage.removeItem('isLoggedIn')
-        localStorage.removeItem('username')
-        localStorage.clear()
-
-        setIsLoggedIn(false)
-        router.push('/login')
-    }
-
-    if (isLoggedIn === null) return null
     return (
         <Sheet>
             <SheetTrigger>

@@ -35,6 +35,8 @@ export function SelectEvent({
 
     // Auto pilih event pertama kalau belum ada, atau dari localStorage
     useEffect(() => {
+        if (typeof window === 'undefined') return
+
         const storedEventName = localStorage.getItem('eventName')
 
         if (storedEventName) {
@@ -47,7 +49,9 @@ export function SelectEvent({
 
     const handleChange = (value: string) => {
         setEventName(value)
-        localStorage.setItem('eventName', value)
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('eventName', value)
+        }
     }
 
     // Tentukan placeholder dinamis (tetap berguna untuk SelectValue saat aktif)

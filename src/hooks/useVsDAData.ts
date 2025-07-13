@@ -8,19 +8,21 @@ import { fetcher } from './fetcher'
 
 export function useVSDAData(storageKeyPrefix = 'vsda') {
     const TIMEZONE = 'Asia/Jakarta'
-    const STORAGE_KEY_START = `${storageKeyPrefix}-start-date`
-    const STORAGE_KEY_END = `${storageKeyPrefix}-end-date`
+    const STORAGE_KEY_START = 'vsda-start-date'
+    const STORAGE_KEY_END = 'vsda-end-date'
 
-    const [dateRange, setDateRange] = useState<DateRange | undefined>(() => {
+    const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined)
+
+    // ⛑️ Ambil dari localStorage hanya di client
+    useEffect(() => {
         const startStr = localStorage.getItem(STORAGE_KEY_START)
         const endStr = localStorage.getItem(STORAGE_KEY_END)
-
         const from = startStr ? new Date(startStr) : new Date('2025-06-23')
         const to = endStr ? new Date(endStr) : new Date('2025-06-28')
+        setDateRange({ from, to })
+    }, [])
 
-        return { from, to }
-    })
-
+    // Simpan ke localStorage saat berubah
     useEffect(() => {
         if (dateRange?.from && dateRange?.to) {
             localStorage.setItem(
@@ -29,7 +31,6 @@ export function useVSDAData(storageKeyPrefix = 'vsda') {
             )
             localStorage.setItem(STORAGE_KEY_END, dateRange.to.toISOString())
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dateRange])
 
     const startDate = dateRange?.from
@@ -53,6 +54,10 @@ export function useVSDAData(storageKeyPrefix = 'vsda') {
         fetcher
     )
 
+    const handleFetchData = () => {
+        mutate()
+    }
+
     return {
         dateRange,
         setDateRange,
@@ -61,6 +66,7 @@ export function useVSDAData(storageKeyPrefix = 'vsda') {
         isLoading,
         mutate,
         formattedStartDate,
-        formattedEndDate
+        formattedEndDate,
+        handleFetchData
     }
 }

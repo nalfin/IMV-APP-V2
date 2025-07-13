@@ -4,6 +4,20 @@ import Link from 'next/link'
 
 const NavCta = () => {
     const { status } = useSession()
+
+    const handleLogout = () => {
+        // ✅ Hindari akses localStorage di server
+        if (typeof window !== 'undefined') {
+            localStorage.removeItem('vsda-start-date')
+            localStorage.removeItem('vsda-end-date')
+            localStorage.removeItem('event-start-date')
+            localStorage.removeItem('event-end-date')
+        }
+
+        // ⛔ Harus redirect ke homepage setelah logout?
+        signOut({ callbackUrl: '/' }) // optional
+    }
+
     return (
         <>
             {status === 'unauthenticated' && (
@@ -17,14 +31,7 @@ const NavCta = () => {
             )}
             {status === 'authenticated' && (
                 <Button
-                    onClick={() => {
-                        // Hapus data VSDA dari localStorage
-                        localStorage.removeItem('vsda-start-date')
-                        localStorage.removeItem('vsda-end-date')
-
-                        // Lakukan logout
-                        signOut()
-                    }}
+                    onClick={handleLogout}
                     className="bg-red-700 text-foreground hover:bg-red-600"
                 >
                     Logout
