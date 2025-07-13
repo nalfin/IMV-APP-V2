@@ -9,7 +9,7 @@ const authOptions: NextAuthOptions = {
     session: {
         strategy: 'jwt'
     },
-    secret: process.env.NEXTAUTH_SECRET, // Pastikan NEXTAUTH_SECRET ada di .env.local
+    secret: process.env.NEXTAUTH_SECRET,
     providers: [
         CredentialsProvider({
             type: 'credentials',
@@ -44,8 +44,8 @@ const authOptions: NextAuthOptions = {
         async jwt({ token, user, account }: any) {
             if (account?.provider === 'credentials' && user) {
                 token.id = user.id
-                token.username = user.name
                 token.username = user.username
+                token.name = user.username
                 token.role = user.role
             }
             return token
@@ -58,7 +58,7 @@ const authOptions: NextAuthOptions = {
                 session.user.username = token.username
             }
             if ('name' in token) {
-                session.user.name = token.username
+                session.user.name = token.name
             }
             if ('role' in token) {
                 session.user.role = token.role

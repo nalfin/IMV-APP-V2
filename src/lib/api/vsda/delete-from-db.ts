@@ -8,7 +8,7 @@ import { getSheetsClient } from '@/lib/sheets/init'
  * @param memberId ID member yang akan dihapus.
  * @returns Objek { success: boolean, message: string }
  */
-export async function deleteMemberFromDbVsda(
+export async function deleteMemberFromDbVsDA(
     spreadsheetId: string,
     memberId: string
 ) {

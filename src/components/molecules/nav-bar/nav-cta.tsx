@@ -17,7 +17,14 @@ const NavCta = () => {
             )}
             {status === 'authenticated' && (
                 <Button
-                    onClick={() => signOut()}
+                    onClick={() => {
+                        // Hapus data VSDA dari localStorage
+                        localStorage.removeItem('vsda-start-date')
+                        localStorage.removeItem('vsda-end-date')
+
+                        // Lakukan logout
+                        signOut()
+                    }}
                     className="bg-red-700 text-foreground hover:bg-red-600"
                 >
                     Logout

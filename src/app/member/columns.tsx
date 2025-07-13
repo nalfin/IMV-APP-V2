@@ -5,7 +5,43 @@ import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown } from 'lucide-react'
 import { Checkbox } from '@/components/atoms/checkbox'
 import { MemberTableType } from '@/types/member.type'
-import { ActionCell } from '@/components/molecules/members/action-cell'
+import { ActionCellMember } from '@/components/molecules/members/action-cell'
+
+function sortingHeader(label: string, column: any) {
+    return (
+        <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+            {label}
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+    )
+}
+
+function renderHQColumn(): ColumnDef<MemberTableType> {
+    return {
+        accessorKey: 'hq',
+        header: ({ column }) => (
+            <div className="text-center">{sortingHeader('HQ', column)}</div>
+        ),
+        cell: ({ row }) => {
+            const hq = row.getValue<number>('hq')
+            const bg =
+                hq >= 27
+                    ? 'bg-transparent border border-green-600 text-white'
+                    : ''
+            return (
+                <div className={`rounded px-2 py-1 text-center ${bg}`}>
+                    {hq}
+                </div>
+            )
+        },
+        size: 20,
+        minSize: 20,
+        maxSize: 80
+    }
+}
 
 export const getMemberColumns = (
     role: string, // Role diterima sebagai parameter pertama
@@ -45,42 +81,39 @@ export const getMemberColumns = (
             accessorKey: 'member_name',
             header: 'Member Name'
         },
-        {
-            header: ({ column }) => (
-                <Button
-                    variant="ghost"
-                    onClick={() =>
-                        column.toggleSorting(column.getIsSorted() === 'asc')
-                    }
-                >
-                    HQ
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            ),
-            accessorKey: 'hq',
-            cell: ({ row }) => <div className="ml-4">{row.getValue('hq')}</div>
-        },
+        renderHQColumn(),
         {
             accessorKey: 'role',
-            header: 'Role'
+            header: () => <div className="text-center">Role</div>,
+            cell: ({ row }) => (
+                <div className="text-center">{row.getValue('role')}</div>
+            )
         },
         {
             accessorKey: 'trop',
-            header: 'Trops'
+            header: () => <div className="text-center">Trop</div>,
+            cell: ({ row }) => (
+                <div className="text-center">{row.getValue('trop')}</div>
+            )
         },
         {
             accessorKey: 'status',
-            header: 'Status',
+            header: () => <div className="text-center">Status</div>,
+
             cell: ({ row }) => {
                 const status = row.getValue<'ACTIVE' | 'INACTIVE'>('status')
                 return (
-                    <span
-                        className={`inline-block w-20 rounded py-1 text-center text-xs font-semibold text-white ${
-                            status === 'ACTIVE' ? 'bg-green-600' : 'bg-red-600'
-                        }`}
-                    >
-                        {status}
-                    </span>
+                    <div className="text-center">
+                        <span
+                            className={`inline-block w-20 rounded py-1 text-center text-xs font-semibold text-white ${
+                                status === 'ACTIVE'
+                                    ? 'bg-green-600'
+                                    : 'bg-red-600'
+                            }`}
+                        >
+                            {status}
+                        </span>
+                    </div>
                 )
             }
         }
@@ -94,7 +127,7 @@ export const getMemberColumns = (
             minSize: 50,
             maxSize: 50,
             cell: ({ row }) => (
-                <ActionCell
+                <ActionCellMember
                     member={row.original}
                     onEdit={onEdit}
                     onDelete={handleDelete}

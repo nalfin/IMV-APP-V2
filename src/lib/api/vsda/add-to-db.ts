@@ -9,7 +9,7 @@ import { getSheetsClient } from '@/lib/sheets/init'
  * @param hqLevel Level HQ member.
  * @returns Objek { success: boolean, message: string }
  */
-export async function addMemberToDbVsda(
+export async function addMemberToDbVsDA(
     spreadsheetId: string,
     memberId: string,
     memberName: string,

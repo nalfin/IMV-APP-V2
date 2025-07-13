@@ -3,6 +3,7 @@ import AppLogo from './app-logo'
 
 const NavLogo = () => {
     const { data: session, status } = useSession()
+
     return (
         <>
             <div className="flex items-center gap-3">

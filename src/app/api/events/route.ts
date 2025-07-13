@@ -1,8 +1,8 @@
 import { handleAddEvents } from '@/lib/api/events/add-event'
-import { handleGetListEvents } from '@/lib/api/events/get-event-list'
+import { handleGetVsDAEvent } from '@/lib/api/events/get-vsda-event'
 
 export async function GET(request: Request) {
-    return handleGetListEvents() // Panggil handler yang sudah diadaptasi
+    return handleGetVsDAEvent(request)
 }
 
 // Handler untuk POST /api/members

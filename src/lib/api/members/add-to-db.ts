@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getSheetsClient } from '@/lib/sheets/init'
 import { generateCustomId, validateSheetID } from '@/lib/sheets/sheet-utils' // generateCustomId tidak lagi digunakan
-import { addMemberToDbVsda } from '@/lib/api/vsda/add-to-db'
+import { addMemberToDbVsDA } from '@/lib/api/vsda/add-to-db'
 
 export async function handleAddMember(request: Request) {
     const spreadsheetId = process.env.GOOGLE_SHEET_ID
@@ -91,24 +91,24 @@ export async function handleAddMember(request: Request) {
         })
         // --- Akhir Logic untuk insertMemberToDB ---
 
-        // --- Logic untuk insertVSDAToDB ---
-        const vsdaResult = await addMemberToDbVsda(
+        // --- Logic untuk insertVsDAToDB ---
+        const VsDAResult = await addMemberToDbVsDA(
             spreadsheetId!,
             idFormat,
             member_name,
             hq
         )
-        if (!vsdaResult.success) {
+        if (!VsDAResult.success) {
             console.error(
                 'Failed to add member to DB_VS_DA:',
-                vsdaResult.message
+                VsDAResult.message
             )
             // Anda bisa memilih untuk mengembalikan error di sini
             // atau hanya log dan tetap mengembalikan sukses jika DB_MEMBER berhasil
             // Untuk saat ini, kita akan mengembalikan error jika DB_VS_DA gagal
-            return NextResponse.json(vsdaResult, { status: 500 })
+            return NextResponse.json(VsDAResult, { status: 500 })
         }
-        // --- Akhir Logic untuk insertVSDAToDB ---
+        // --- Akhir Logic untuk insertVsDAToDB ---
 
         // Mengembalikan respons sukses dengan ID member yang baru dibuat
         return NextResponse.json(

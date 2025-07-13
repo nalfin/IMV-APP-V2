@@ -15,13 +15,17 @@ import { MoreHorizontal } from 'lucide-react'
 import { MemberTableType } from '@/types/member.type'
 import CustomAlertDialog from '@/components/molecules/custom-alert-dialog'
 
-interface ActionCellProps {
+interface ActionCellMemberProps {
     member: MemberTableType
     onEdit: (member: MemberTableType) => void
     onDelete: (id: string) => Promise<void> // onDelete dari TableOfMembers
 }
 
-export function ActionCell({ member, onEdit, onDelete }: ActionCellProps) {
+export function ActionCellMember({
+    member,
+    onEdit,
+    onDelete
+}: ActionCellMemberProps) {
     const [isDeleting, setIsDeleting] = useState(false) // State untuk menunjukkan proses penghapusan (untuk loader)
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false) // State untuk mengontrol visibilitas dialog
 

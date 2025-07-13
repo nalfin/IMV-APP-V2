@@ -1,6 +1,6 @@
 import { getSheetsClient } from '@/lib/sheets/init'
 
-export async function updateMemberInDbVsda(
+export async function updateMemberInDbVsDA(
     spreadsheetId: string,
     memberId: string,
     newMemberName: string,

@@ -8,7 +8,6 @@ import { Checkbox } from '@/components/atoms/checkbox'
 import { Label } from '@/components/atoms/label'
 import { MemberTableType } from '@/types/member.type'
 import { DialogAddMember } from '@/components/organisms/members/dialog-add'
-import { useMembers } from '@/hooks/use-member'
 import { useSession } from 'next-auth/react'
 // import { DialogAddMember } from '@/app/member/dialog-add' // Path ini mungkin perlu disesuaikan jika DialogAddMember juga dipindahkan
 // import { Member } from '@/types/member'
@@ -33,7 +32,7 @@ export function DataTableToolbarMember<TData extends MemberTableType>({
     const { data: session } = useSession()
     const role = (session?.user as { role: string })?.role ?? 'unknown'
     return (
-        <div className="flex flex-col-reverse gap-4 py-4 md:flex-row md:items-center md:justify-between md:gap-6">
+        <div className="x flex flex-col-reverse gap-4 md:flex-row md:items-center md:justify-between md:gap-6">
             {/* Search Input and Bulk Edit Button */}
             <div className="flex w-full items-center gap-6 md:max-w-md md:gap-4">
                 <Input

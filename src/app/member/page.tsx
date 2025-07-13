@@ -1,6 +1,6 @@
 'use client'
 
-import TableOfMembers from '@/app/member/member-table'
+import TableOfMembers from '@/app/member/table-of-member'
 import CardMemberSummary from '@/components/organisms/members/card-summary'
 import { FullScreenLoader } from '@/components/ui/fullscreen-loader'
 import { fetcher } from '@/hooks/fetcher'

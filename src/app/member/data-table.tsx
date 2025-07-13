@@ -67,7 +67,7 @@ export function MemberDataTable<TData extends MemberTableType, TValue>({
         .rows.map((row) => row.original)
 
     return (
-        <div className="min-w-full space-y-3 font-mono">
+        <div className="min-w-full space-y-6 font-mono">
             <DataTableToolbarMember
                 table={table}
                 onSuccess={onSuccess}

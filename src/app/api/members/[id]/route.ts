@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server'
 import { validateSheetID } from '@/lib/sheets/sheet-utils'
-import { updateMemberInDbMembers } from '@/lib/api/members/update-to-db'
-import { updateMemberInDbVsda } from '@/lib/api/vsda/update-to-db' // Import fungsi baru
-import { updateMemberInDbEvents } from '@/lib/api/events/update-to-db' // Import fungsi yang diperbarui
+import { updateMemberInDbMembers } from '@/lib/api/members/update-member-to-db'
+import { updateMemberInDbEvents } from '@/lib/api/events/update-member-to-db' // Import fungsi yang diperbarui
 import { deleteMemberFromDbMembers } from '@/lib/api/members/delete-from-db'
-import { deleteMemberFromDbVsda } from '@/lib/api/vsda/delete-from-db'
 import { deleteMemberFromDbEvents } from '@/lib/api/events/delete-from-db'
 import { calculateMemberSummary } from '@/lib/api/members/calculate-member-summary'
 import { updateMemberSummaryInDb } from '@/lib/api/members/update-member-summary'
+import { updateMemberInDbVsDA } from '@/lib/api/vsda/update-member-to-db'
+import { deleteMemberFromDbVsDA } from '@/lib/api/vsda/delete-from-db'
 
 // Handler untuk PUT /api/members/[id]
 export async function PUT(
@@ -86,21 +86,21 @@ export async function PUT(
     const updatedHq = dbMembersResult.data[2]
 
     // --- Langkah 2: Update DB_VS_DA (jika nama atau HQ berubah) ---
-    let dbVsdaResult = {
+    let dbVsDAResult = {
         success: true,
         message: 'No relevant changes for DB_VS_DA.'
     }
     if (member_name !== undefined || hq !== undefined) {
-        dbVsdaResult = await updateMemberInDbVsda(
+        dbVsDAResult = await updateMemberInDbVsDA(
             spreadsheetId!,
             memberId,
             updatedMemberName,
             updatedHq
         )
-        if (!dbVsdaResult.success) {
-            console.error('Failed to update DB_VS_DA:', dbVsdaResult.message)
+        if (!dbVsDAResult.success) {
+            console.error('Failed to update DB_VS_DA:', dbVsDAResult.message)
             // Anda bisa memilih untuk mengembalikan error di sini atau hanya log dan melanjutkan
-            // return NextResponse.json(dbVsdaResult, { status: 500 });
+            // return NextResponse.json(dbVsDAResult, { status: 500 });
         }
     }
 
@@ -155,7 +155,7 @@ export async function PUT(
             success: true,
             message: 'Member and associated entries updated successfully!',
             dbMembers: dbMembersResult,
-            dbVsda: dbVsdaResult,
+            dbVsDA: dbVsDAResult,
             dbEvents: dbEventsResult,
             dbSummary: summaryResult // Tambahkan hasil summary ke respons
         },
@@ -205,11 +205,11 @@ export async function DELETE(
     // --- Langkah 2: Hapus dari DB_VS_DA ---
     // Tidak perlu cek success secara ketat di sini, karena mungkin tidak ada entri di DB_VS_DA
     // dan kita ingin melanjutkan penghapusan di DB_EVENTS.
-    const dbVsdaResult = await deleteMemberFromDbVsda(spreadsheetId!, memberId)
-    if (!dbVsdaResult.success) {
-        console.error('Failed to delete from DB_VS_DA:', dbVsdaResult.message)
+    const dbVsDAResult = await deleteMemberFromDbVsDA(spreadsheetId!, memberId)
+    if (!dbVsDAResult.success) {
+        console.error('Failed to delete from DB_VS_DA:', dbVsDAResult.message)
         // Anda bisa memilih untuk mengembalikan error di sini jika kegagalan di DB_VS_DA kritis
-        // return NextResponse.json(dbVsdaResult, { status: 500 });
+        // return NextResponse.json(dbVsDAResult, { status: 500 });
     }
 
     // --- Langkah 3: Hapus dari DB_EVENTS ---
@@ -232,7 +232,7 @@ export async function DELETE(
             success: true,
             message: `Member ${memberId} and associated entries deleted successfully!`,
             dbMembers: dbMembersResult,
-            dbVsda: dbVsdaResult,
+            dbVsDA: dbVsDAResult,
             dbEvents: dbEventsResult
         },
         { status: 200 }
