@@ -4,6 +4,8 @@ import * as React from 'react'
 import { Table } from '@tanstack/react-table'
 import { Button } from '@/components/atoms/button'
 import { Checkbox } from '@/components/atoms/checkbox'
+import RowPerPage from '@/components/atoms/row-per-page'
+import ButtonPrevNext from '@/components/molecules/vs-da/button-prev-next'
 
 interface DataTablePaginationProps<TData> {
     table: Table<TData>
@@ -34,22 +36,8 @@ export function DataTablePaginationMember<TData>({
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => table.previousPage()}
-                        disabled={!table.getCanPreviousPage()}
-                    >
-                        Previous
-                    </Button>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => table.nextPage()}
-                        disabled={!table.getCanNextPage()}
-                    >
-                        Next
-                    </Button>
+                    <RowPerPage table={table} />
+                    <ButtonPrevNext table={table} />
                 </div>
             </div>
         </>

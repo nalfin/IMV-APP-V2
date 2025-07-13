@@ -10,6 +10,7 @@ import CheckboxShowLast from '@/components/molecules/vs-da/checkbox-show-last'
 import CheckboxShowDate from '@/components/molecules/vs-da/checkbox-show-date'
 import ShowingData from '@/components/molecules/vs-da/showing-data'
 import ButtonPrevNext from '@/components/molecules/vs-da/button-prev-next'
+import RowPerPage from '@/components/atoms/row-per-page'
 
 interface DataTablePaginationProps<TData> {
     table: Table<TData>
@@ -53,7 +54,10 @@ export function DataTablePaginationVsDA<TData>({
                         </div>
                     </div>
 
-                    <ButtonPrevNext table={table} />
+                    <div className="flex gap-3">
+                        <RowPerPage table={table} />
+                        <ButtonPrevNext table={table} />
+                    </div>
                 </div>
 
                 <div className="flex min-w-max flex-col items-center gap-2 lg:hidden">
@@ -73,7 +77,10 @@ export function DataTablePaginationVsDA<TData>({
                             selectedRowsCount={selectedRowsCount}
                             totalFilteredRowsCount={totalFilteredRowsCount}
                         />
-                        <ButtonPrevNext table={table} />
+                        <div className="flex gap-3">
+                            <RowPerPage table={table} />
+                            <ButtonPrevNext table={table} />
+                        </div>
                     </div>
                 </div>
             </div>
