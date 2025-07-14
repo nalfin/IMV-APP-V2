@@ -13,6 +13,7 @@ import DialogEditEvent from '@/components/organisms/vs-da/dialog-edit'
 import { EventTableType } from '@/types/event.type'
 import { getEventColumns } from '@/app/event/columns'
 import { EventDataTable } from '@/app/event/data-table'
+import { constructFromSymbol } from 'date-fns/constants'
 
 export default function TableOfEvent({
     data,

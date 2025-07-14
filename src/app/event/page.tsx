@@ -5,15 +5,9 @@ import { SelectEvent } from '@/components/molecules/events/select-event'
 import CardEvent from '@/components/organisms/events/card-event'
 import { DialogAddEvents } from '@/components/organisms/events/dialog-add'
 import { FullScreenLoader } from '@/components/ui/fullscreen-loader'
-import { fetcher } from '@/hooks/fetcher'
 import { useEventData } from '@/hooks/useEventData'
 import { getEventSummary } from '@/lib/utils/summary-event'
-import { EventOptionType } from '@/types/event.type'
-import { formatInTimeZone } from 'date-fns-tz'
 import { useSession } from 'next-auth/react'
-import { useEffect, useState } from 'react'
-import { DateRange } from 'react-day-picker'
-import useSWR from 'swr'
 
 const EventPages = () => {
     const {
@@ -34,6 +28,8 @@ const EventPages = () => {
 
     const { data: session } = useSession()
     const role = (session?.user as { role?: string })?.role || ''
+
+    console.log('vsdaEventData', vsdaEventData)
 
     return (
         <>
@@ -57,7 +53,7 @@ const EventPages = () => {
                 <CardEvent summary={summary} />
 
                 <TableOfEvent
-                    data={vsdaEventData?.data || []}
+                    data={vsdaEventData || []}
                     onSuccess={handleFetchVsDAEvent}
                     dateRange={dateRange}
                     setDateRange={setDateRange}

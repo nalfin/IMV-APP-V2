@@ -87,6 +87,7 @@ export function getEventColumns(
                     </div>
                 ),
                 cell: ({ row }: { row: { original: EventTableType } }) => {
+                    // console.log(row.original.data_point_da)
                     const value = row.original.data_point_da.find(
                         (d) => d.date === dateStr
                     )?.value
@@ -213,70 +214,4 @@ export function getEventColumns(
     ]
 
     return baseColumns
-
-    // const resultColumn: ColumnDef<EventTableType> = {
-    //     id: 'result',
-    //     accessorFn: (row) => {
-    //         const hq = row.hq
-    //         const formattedDates = dateList
-    //             .filter((d) => d.getDay() !== 0)
-    //             .map(formatToYYYYMMDD)
-
-    //         const lowPoints = formattedDates.filter((date) => {
-    //             const match = row.data_point_da.find((d) => d.date === date)
-    //             const raw = match?.value || ''
-    //             const num = raw.match(/\d+/)
-    //             const value = num ? parseInt(num[0], 10) : null
-    //             return value !== null && value < 7
-    //         })
-
-    //         const lowCount = lowPoints.length
-
-    //         if (hq === 27) {
-    //             return lowCount > 4 ? 'UNQUALIFIED' : 'QUALIFIED'
-    //         } else {
-    //             return lowCount > 4 ? 'UNQUALIFIED' : 'ON PROGRESS...'
-    //         }
-    //     },
-    //     header: ({ column }) => (
-    //         <Button
-    //             variant="ghost"
-    //             onClick={() =>
-    //                 column.toggleSorting(column.getIsSorted() === 'asc')
-    //             }
-    //         >
-    //             Hasil
-    //             <ArrowUpDown className="ml-2 h-4 w-4" />
-    //         </Button>
-    //     ),
-    //     sortingFn: (rowA, rowB, columnId) => {
-    //         const order = ['QUALIFIED', 'ON PROGRESS...', 'UNQUALIFIED']
-    //         const a = rowA.getValue<string>(columnId)
-    //         const b = rowB.getValue<string>(columnId)
-    //         return order.indexOf(a) - order.indexOf(b)
-    //     },
-    //     size: 150,
-    //     minSize: 120,
-    //     maxSize: 200,
-    //     cell: ({ getValue }) => {
-    //         const result = getValue<string>()
-
-    //         const bg =
-    //             result === 'QUALIFIED'
-    //                 ? 'bg-green-600'
-    //                 : result === 'UNQUALIFIED'
-    //                   ? 'bg-red-600'
-    //                   : 'bg-gray-800'
-
-    //         return (
-    //             <div
-    //                 className={`w-full rounded px-2 py-1 text-center font-semibold text-white ${bg}`}
-    //             >
-    //                 {result}
-    //             </div>
-    //         )
-    //     }
-    // }
-
-    // return [...baseColumns, ...dynamicColumns, percentageColumn, resultColumn]
 }

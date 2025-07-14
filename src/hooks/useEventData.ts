@@ -5,24 +5,22 @@ import { DateRange } from 'react-day-picker'
 import useSWR from 'swr'
 import { useSession } from 'next-auth/react'
 import { fetcher } from './fetcher'
-import { EventOptionType } from '@/types/event.type'
 import { formatInTimeZone } from 'date-fns-tz'
+import { EventOptionType } from '@/types/event.type'
 
 export function useEventData() {
     const TIMEZONE = 'Asia/Jakarta'
     const STORAGE_KEY_START = 'event-start-date'
     const STORAGE_KEY_END = 'event-end-date'
 
+    const [dateRange, setDateRange] = useState<DateRange>()
     const [eventName, setEventName] = useState('')
-    const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined)
-    const [hasMounted, setHasMounted] = useState(false)
 
-    // Ambil tanggal dari localStorage saat mount (client-only)
+    // Format tanggal sesuai header sheet: 'd/M/yy' tanpa leading zero
+    const formatForSheetHeader = (date: Date) =>
+        formatInTimeZone(date, TIMEZONE, 'd/M/yy')
+
     useEffect(() => {
-        setHasMounted(true)
-
-        if (typeof window === 'undefined') return
-
         const startStr = localStorage.getItem(STORAGE_KEY_START)
         const endStr = localStorage.getItem(STORAGE_KEY_END)
 
@@ -32,9 +30,8 @@ export function useEventData() {
         setDateRange({ from, to })
     }, [])
 
-    // Simpan tanggal ke localStorage saat berubah
     useEffect(() => {
-        if (typeof window !== 'undefined' && dateRange?.from && dateRange?.to) {
+        if (dateRange?.from && dateRange?.to) {
             localStorage.setItem(
                 STORAGE_KEY_START,
                 dateRange.from.toISOString()
@@ -43,49 +40,51 @@ export function useEventData() {
         }
     }, [dateRange])
 
+    const formattedStartDate = dateRange?.from
+        ? formatForSheetHeader(dateRange.from)
+        : ''
+    const formattedEndDate = dateRange?.to
+        ? formatForSheetHeader(dateRange.to)
+        : ''
+
+    console.log({ formattedStartDate, formattedEndDate, eventName })
+
     const { data: session } = useSession()
     const role = (session?.user as { role?: string })?.role || ''
 
-    const startDate = dateRange?.from
-    const endDate = dateRange?.to
-
-    const formattedStartDate = startDate
-        ? formatInTimeZone(startDate, TIMEZONE, 'dd/M/yy')
-        : ''
-    const formattedEndDate = endDate
-        ? formatInTimeZone(endDate, TIMEZONE, 'dd/M/yy')
-        : ''
-
-    // Ambil daftar event
     const {
         data: eventOptions,
         error: eventOptionsError,
         isLoading: isLoadingEventOptions,
         mutate: mutateEventOptions
     } = useSWR<EventOptionType[]>(
-        hasMounted
-            ? `${process.env.NEXT_PUBLIC_API_URL}/api/events/event-list`
-            : null,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/events/event-list`,
         fetcher
     )
 
-    // Ambil data vsda event berdasarkan nama + tanggal
     const {
-        data: vsdaEventData,
+        data: vsdaEventRes,
         error: vsdaEventError,
         isLoading: isLoadingVsdaEvent,
         mutate: mutateVsdaEvent
     } = useSWR(
-        hasMounted && startDate && endDate && eventName
+        dateRange?.from && dateRange?.to && eventName
             ? [
-                  `${process.env.NEXT_PUBLIC_API_URL}/api/events`,
+                  'vsda-event-data',
                   formattedStartDate,
                   formattedEndDate,
                   eventName
               ]
             : null,
-        fetcher
+        () =>
+            fetcher(
+                `${process.env.NEXT_PUBLIC_API_URL}/api/events?from=${formattedStartDate}&to=${formattedEndDate}&event=${encodeURIComponent(
+                    eventName
+                )}`
+            )
     )
+
+    const vsdaEventData = vsdaEventRes?.data ?? []
 
     return {
         eventName,

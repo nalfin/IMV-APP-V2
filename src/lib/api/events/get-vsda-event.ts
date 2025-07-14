@@ -1,11 +1,18 @@
 // src/lib/api/vsda/get-vsda-event.ts
-
 import { NextResponse } from 'next/server'
 import { getSheetsClient } from '@/lib/sheets/init'
-import { parseCustomDate, formatDateToISO } from '@/lib/utils/format-date'
 import { validateSheetID } from '@/lib/sheets/sheet-utils'
 import { PoinVsDAType } from '@/types/vsda.type'
-import { parseCustomDateEvent } from '@/lib/utils/format-date-event'
+import { format, parse } from 'date-fns'
+
+function convertToIsoDate(dateStr: string): string {
+    try {
+        const parsed = parse(dateStr, 'd/M/yy', new Date())
+        return format(parsed, 'yyyy-MM-dd') // <- pakai leading zero!
+    } catch {
+        return dateStr
+    }
+}
 
 export async function handleGetVsDAEvent(request: Request) {
     const spreadsheetId = process.env.GOOGLE_SHEET_ID
@@ -18,23 +25,13 @@ export async function handleGetVsDAEvent(request: Request) {
     }
 
     const { searchParams } = new URL(request.url)
-    const fromDateStr = searchParams.get('from') || ''
-    const toDateStr = searchParams.get('to') || ''
-    const eventName = searchParams.get('event') || ''
+    const from = searchParams.get('from') || ''
+    const to = searchParams.get('to') || ''
+    const eventName = searchParams.get('event')?.trim() || ''
 
-    if (!fromDateStr || !toDateStr || !eventName) {
+    if (!from || !to || !eventName) {
         return NextResponse.json(
             { success: false, message: 'Missing from, to, or event parameter' },
-            { status: 400 }
-        )
-    }
-
-    const fromDate = parseCustomDateEvent(fromDateStr)
-    const toDate = parseCustomDateEvent(toDateStr)
-
-    if (!fromDate || !toDate || toDate < fromDate) {
-        return NextResponse.json(
-            { success: false, message: 'Invalid date range' },
             { status: 400 }
         )
     }
@@ -42,10 +39,10 @@ export async function handleGetVsDAEvent(request: Request) {
     try {
         const sheets = await getSheetsClient()
 
-        // --- Ambil nama peserta event dari sheet DB_EVENT
+        // Ambil daftar peserta event
         const eventRes = await sheets.spreadsheets.values.get({
             spreadsheetId,
-            range: 'DB_EVENTS!A2:D' // A: ID, B: Nama, C: HQ, D: Event
+            range: 'DB_EVENTS!A2:D'
         })
 
         const eventRows = eventRes.data.values || []
@@ -55,7 +52,7 @@ export async function handleGetVsDAEvent(request: Request) {
                 (row) =>
                     row[1] && row[3] && row[3].toString().trim() === eventName
             )
-            .map((row) => row[1].toString().trim()) // Ambil Nama dari kolom B
+            .map((row) => row[1].toString().trim())
 
         if (allowedNames.length === 0) {
             return NextResponse.json(
@@ -64,7 +61,7 @@ export async function handleGetVsDAEvent(request: Request) {
             )
         }
 
-        // --- Ambil data dari sheet DB_VS_DA
+        // Ambil data VSDA
         const vsdaRes = await sheets.spreadsheets.values.get({
             spreadsheetId,
             range: 'DB_VS_DA!A:ZZ'
@@ -78,8 +75,24 @@ export async function handleGetVsDAEvent(request: Request) {
             )
         }
 
-        const dateHeaders = rows[1] // baris kedua = tanggal
+        const headerRow = rows[1]
         const dataRows = rows.slice(2)
+
+        const startIndex = headerRow.findIndex((d) => d === from)
+        const endIndex = headerRow.findIndex((d) => d === to)
+
+        if (startIndex === -1 || endIndex === -1 || startIndex > endIndex) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message:
+                        'Tanggal tidak ditemukan atau tidak valid di header sheet.',
+                    from,
+                    to
+                },
+                { status: 400 }
+            )
+        }
 
         const result = dataRows
             .map((row) => {
@@ -90,30 +103,14 @@ export async function handleGetVsDAEvent(request: Request) {
                 if (!name || !allowedNames.includes(name)) return null
 
                 const data_point_da: PoinVsDAType[] = []
-
-                for (let i = 3; i < dateHeaders.length; i++) {
-                    const dateStr = dateHeaders[i]
-                    const sheetDate = parseCustomDate(dateStr)
-
-                    if (!sheetDate) continue
-
-                    const isInRange =
-                        sheetDate >= fromDate && sheetDate <= toDate
-
-                    if (isInRange) {
-                        data_point_da.push({
-                            date: formatDateToISO(sheetDate),
-                            value: row[i] ?? ''
-                        })
-                    }
+                for (let i = startIndex; i <= endIndex; i++) {
+                    data_point_da.push({
+                        date: convertToIsoDate(headerRow[i]),
+                        value: row[i] ?? ''
+                    })
                 }
 
-                return {
-                    id,
-                    member_name: name,
-                    hq,
-                    data_point_da
-                }
+                return { id, member_name: name, hq, data_point_da }
             })
             .filter(Boolean)
 

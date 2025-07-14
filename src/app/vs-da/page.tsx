@@ -14,6 +14,8 @@ const VsDAPages = () => {
     const { data, isLoading, dateRange, setDateRange, handleFetchData } =
         useVSDAData()
 
+    console.log('data', data)
+
     return (
         <>
             {isLoading && <FullScreenLoader />}
