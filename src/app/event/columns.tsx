@@ -79,6 +79,12 @@ export function getEventColumns(
             const dateStr = formatToYYYYMMDD(dateObj)
             return {
                 id: `date-${dateStr}`,
+                accessorFn: (row: EventTableType) => {
+                    return (
+                        row.data_point_da.find((d) => d.date === dateStr)
+                            ?.value || null
+                    )
+                },
                 header: () => (
                     <div className="text-center">
                         {showDateHeader

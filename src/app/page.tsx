@@ -60,7 +60,7 @@ export default function Home() {
                                 error={eventOptionsError}
                             />
                             <TableOfEvent
-                                data={vsdaEventData?.data || []}
+                                data={vsdaEventData || []}
                                 onSuccess={handleFetchVsDAEvent}
                                 dateRange={dateRange}
                                 setDateRange={setDateRange}

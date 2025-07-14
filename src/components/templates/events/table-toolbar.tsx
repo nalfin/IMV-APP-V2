@@ -6,6 +6,7 @@ import { Input } from '@/components/atoms/input'
 import { DateRange } from 'react-day-picker'
 import { EventTableType } from '@/types/event.type'
 import { DatePickRangeEvent } from '@/components/templates/events/date-pick-range'
+import { DataTableViewOptionsVsDA } from '@/components/atoms/data-table-view-options-vsda'
 
 interface DataTableToolbarProps<TData> {
     table: Table<TData>
@@ -39,7 +40,8 @@ export function DataTableToolbarEvent<TData extends EventTableType>({
             </div>
 
             {/* Show From Last Checkbox and Add Member Dialog */}
-            <div className="flex justify-between gap-3">
+            <div className="flex flex-row gap-3">
+                <DataTableViewOptionsVsDA table={table} />
                 <DatePickRangeEvent
                     dateRange={dateRange}
                     setDateRange={setDateRange}

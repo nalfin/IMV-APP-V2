@@ -51,58 +51,60 @@ export function DatePickRangeEvent({
 
     return (
         <>
-            <div className="relative flex min-w-full gap-2 lg:w-[280px]">
-                <Input
-                    id="date"
-                    value={formatRange(dateRange)}
-                    placeholder="Pilih rentang tanggal"
-                    className="w-full bg-input/25 pr-10"
-                    // `onChange` dan `onKeyDown` untuk input kurang relevan
-                    // ketika interaksi utama melalui popover kalender.
-                    // Anda dapat menghapusnya atau menyesuaikannya untuk parsing input manual.
-                    onChange={() => {
-                        /* Tangani parsing input manual jika diinginkan */
-                    }}
-                    onKeyDown={(e) => {
-                        if (e.key === 'ArrowDown') {
-                            e.preventDefault()
-                            setOpen(true)
-                        }
-                    }}
-                />
-                <Popover open={open} onOpenChange={setOpen}>
-                    <PopoverTrigger asChild>
-                        <Button
-                            id="date-picker"
-                            variant="ghost"
-                            className="absolute right-2 top-1/2 size-6 -translate-y-1/2"
+            <div className="w-full lg:w-[280px]">
+                <div className="relative flex w-full gap-2">
+                    <Input
+                        id="date"
+                        value={formatRange(dateRange)}
+                        placeholder="Pilih rentang tanggal"
+                        className="w-full bg-input/25 pr-10"
+                        // `onChange` dan `onKeyDown` untuk input kurang relevan
+                        // ketika interaksi utama melalui popover kalender.
+                        // Anda dapat menghapusnya atau menyesuaikannya untuk parsing input manual.
+                        onChange={() => {
+                            /* Tangani parsing input manual jika diinginkan */
+                        }}
+                        onKeyDown={(e) => {
+                            if (e.key === 'ArrowDown') {
+                                e.preventDefault()
+                                setOpen(true)
+                            }
+                        }}
+                    />
+                    <Popover open={open} onOpenChange={setOpen}>
+                        <PopoverTrigger asChild>
+                            <Button
+                                id="date-picker"
+                                variant="ghost"
+                                className="absolute right-2 top-1/2 size-6 -translate-y-1/2"
+                            >
+                                <CalendarIcon className="size-3.5" />
+                                <span className="sr-only">Pilih tanggal</span>
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent
+                            className="w-auto overflow-hidden p-0"
+                            align="end"
+                            alignOffset={-8}
+                            sideOffset={10}
                         >
-                            <CalendarIcon className="size-3.5" />
-                            <span className="sr-only">Pilih tanggal</span>
-                        </Button>
-                    </PopoverTrigger>
-                    <PopoverContent
-                        className="w-auto overflow-hidden p-0"
-                        align="end"
-                        alignOffset={-8}
-                        sideOffset={10}
-                    >
-                        <Calendar
-                            mode="range"
-                            defaultMonth={dateRange?.from}
-                            selected={dateRange}
-                            onSelect={(range) => {
-                                setDateRange(range)
-                                // Tutup popover setelah rentang dipilih (tanggal awal dan akhir)
-                                if (range?.from && range?.to) {
-                                    setOpen(false)
-                                }
-                            }}
-                            className="rounded-lg border shadow-sm"
-                            numberOfMonths={2} // Seringkali berguna untuk rentang tanggal
-                        />
-                    </PopoverContent>
-                </Popover>
+                            <Calendar
+                                mode="range"
+                                defaultMonth={dateRange?.from}
+                                selected={dateRange}
+                                onSelect={(range) => {
+                                    setDateRange(range)
+                                    // Tutup popover setelah rentang dipilih (tanggal awal dan akhir)
+                                    if (range?.from && range?.to) {
+                                        setOpen(false)
+                                    }
+                                }}
+                                className="rounded-lg border shadow-sm"
+                                numberOfMonths={2} // Seringkali berguna untuk rentang tanggal
+                            />
+                        </PopoverContent>
+                    </Popover>
+                </div>
             </div>
         </>
     )
