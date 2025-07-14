@@ -24,12 +24,10 @@ const EventPages = () => {
         handleFetchVsDAEvent
     } = useEventData()
 
-    const summary = getEventSummary(vsdaEventData?.data || [])
+    const summary = getEventSummary(vsdaEventData || [])
 
     const { data: session } = useSession()
     const role = (session?.user as { role?: string })?.role || ''
-
-    console.log('vsdaEventData', vsdaEventData)
 
     return (
         <>
