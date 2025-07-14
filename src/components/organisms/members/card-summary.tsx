@@ -1,11 +1,7 @@
-import { useEffect, useState } from 'react'
-// import { fetchMemberSummary } from '@/lib/api/member/get-member-summary'
-// import { processSummaryByWeek } from '@/lib/api/process-summary-by-week'
+import { useEffect } from 'react'
 import CardMemberSummarySingle from '@/components/molecules/members/card-summary'
+import { useMemberSummary } from '@/hooks/useMemberSummary'
 import { SummaryWithChange } from '@/types/member.type'
-import useSWR from 'swr'
-import { fetcher } from '@/hooks/fetcher'
-import { processSummaryByWeek } from '@/lib/utils/process-summary-by-week'
 
 function getChangeLabel(change: number): string {
     if (change > 0) return `Naik ${change} dibanding minggu lalu`
@@ -13,22 +9,20 @@ function getChangeLabel(change: number): string {
     return 'Tidak berubah dari minggu lalu'
 }
 
-export default function CardMemberSummary() {
-    const { data } = useSWR(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/members/summary`,
-        fetcher
-    )
+type Props = {
+    onExposeUpdate?: (handler: () => void) => void
+}
 
-    const dataSummary = data || []
-    const fixedData = dataSummary.map((item: any) => ({
-        timestamp: item.time_stamp,
-        total: item.total,
-        'HQ ≥ 27': item.upLevel,
-        'HQ 24-26': item.midLevel,
-        'HQ < 24': item.downLevel
-    }))
+export default function CardMemberSummary({ onExposeUpdate }: Props) {
+    const { summary, isLoadingSummary, handleUpdateSummary } =
+        useMemberSummary()
 
-    const summary = processSummaryByWeek(fixedData)
+    // Kirim update handler ke parent saat siap
+    useEffect(() => {
+        if (onExposeUpdate) {
+            onExposeUpdate(handleUpdateSummary)
+        }
+    }, [handleUpdateSummary, onExposeUpdate])
 
     if (!summary) return null
 
